@@ -4,13 +4,14 @@ MAINTAINER Anton Malinskiy "anton@malinskiy.com"
 
 # Set up insecure default key
 COPY adbkey adbkey.pub adb_usb.ini /root/.android/
+COPY marathon-cli-0.2.1-SNAPSHOT-all.jar /opt/marathon/
 
 ENV LINK_ANDROID_SDK=https://dl.google.com/android/repository/sdk-tools-linux-4333796.zip \
     LANG=en_US.UTF-8 \
     LANGUAGE=en_US:en \
     LC_ALL=en_US.UTF-8 \
     ANDROID_HOME=/opt/android-sdk-linux \
-    PATH="$PATH:/opt/android-sdk-linux/tools:/opt/android-sdk-linux/platform-tools:/opt/android-sdk-linux/tools/bin:/opt/android-sdk-linux/emulator"
+    PATH="$PATH:/opt/android-sdk-linux/tools:/opt/android-sdk-linux/platform-tools:/opt/android-sdk-linux/tools/bin:/opt/android-sdk-linux/emulator:/opt/marathon/"
 
 RUN dpkg --add-architecture i386 && \
     echo "deb mirror://mirrors.ubuntu.com/mirrors.txt bionic main restricted universe multiverse" > /etc/apt/sources.list && \
@@ -18,6 +19,7 @@ RUN dpkg --add-architecture i386 && \
     echo "deb mirror://mirrors.ubuntu.com/mirrors.txt bionic-security main restricted universe multiverse" >> /etc/apt/sources.list && \
     echo "deb mirror://mirrors.ubuntu.com/mirrors.txt bionic-backports main restricted universe multiverse" >> /etc/apt/sources.list && \
     apt-get update && \
+    y | apt-get install default-jre && \
     DEBIAN_FRONTEND=noninteractive apt-get install -yq software-properties-common libstdc++6:i386 zlib1g:i386 libncurses5:i386 \
                         locales ca-certificates apt-transport-https curl unzip redir iproute2 \
                         openjdk-8-jdk xvfb x11vnc fluxbox nano libpulse0 telnet expect\
