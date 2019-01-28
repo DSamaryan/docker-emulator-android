@@ -69,7 +69,8 @@ fi
 
 echo "emulator_opts: $emulator_opts"
 
-LIBGL_DEBUG=verbose ./qemu/linux-x86_64/qemu-system-x86_64 -avd x86 -ports $console_port,$adb_port $emulator_opts -qemu $QEMU_OPTS
+LIBGL_DEBUG=verbose ./qemu/linux-x86_64/qemu-system-x86_64 -avd x86 -ports $console_port,$adb_port $emulator_opts -qemu $QEMU_OPTS &
+EMULATOR_PID
 
 adb wait-for-device
 
@@ -88,6 +89,6 @@ done
 
 sleep 2
 
-java -jar cli-0.2.1-SNAPSHOT-all.jar --android-sdk $ANDROID_HOME --marathonfile "/opt/marathon/shared/input/marathonfile.cfg"
+java -jar /opt/marathon/marathon-cli-0.2.1-SNAPSHOT-all.jar --android-sdk $ANDROID_HOME --marathonfile "/opt/marathon/shared/input/marathonfile.con"
 
 adb emu kill
