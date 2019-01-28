@@ -70,3 +70,24 @@ fi
 echo "emulator_opts: $emulator_opts"
 
 LIBGL_DEBUG=verbose ./qemu/linux-x86_64/qemu-system-x86_64 -avd x86 -ports $console_port,$adb_port $emulator_opts -qemu $QEMU_OPTS
+
+adb wait-for-device
+
+boot_completed=`adb -e shell getprop sys.boot_completed 2>&1`
+timeout=0
+until [ "X${boot_completed:0:1}" = "X1" ]; do
+    sleep 1
+    boot_completed=`adb shell getprop sys.boot_completed 2>&1 | head -n 1`
+    echo "Read boot_completed property: <$boot_completed>"
+    let "timeout += 1"
+    if [ $timeout -gt 300 ]; then
+         echo "Failed to start emulator"
+         exit 1
+    fi
+done
+
+sleep 2
+
+java -jar cli-0.2.1-SNAPSHOT-all.jar --android-sdk $ANDROID_HOME --marathonfile "/opt/marathon/shared/input/marathonfile.cfg"
+
+adb emu kill
