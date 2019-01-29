@@ -70,7 +70,7 @@ fi
 echo "emulator_opts: $emulator_opts"
 
 LIBGL_DEBUG=verbose ./qemu/linux-x86_64/qemu-system-x86_64 -avd x86 -ports $console_port,$adb_port $emulator_opts -qemu $QEMU_OPTS &
-EMULATOR_PID
+EMULATOR_PID=$!
 
 adb wait-for-device
 
@@ -87,8 +87,14 @@ until [ "X${boot_completed:0:1}" = "X1" ]; do
     fi
 done
 
+sleep 5
+
+adb shell settings put global http_proxy ts16.pyn.ru:3128 #set http proxy
+adb shell settings put secure location_providers_allowed +gps #enable gps source
+adb shell settings put secure location_providers_allowed +network #enable network source
+
 sleep 2
 
-java -jar /opt/marathon/marathon-cli-0.2.1-SNAPSHOT-all.jar --android-sdk $ANDROID_HOME --marathonfile "/opt/marathon/shared/input/marathonfile.con"
+java -jar /opt/marathon/marathon-cli-0.2.1-SNAPSHOT-all.jar --android-sdk $ANDROID_HOME --marathonfile "/opt/marathon/shared/input/marathonfile.cfg"
 
 adb emu kill

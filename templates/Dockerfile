@@ -52,6 +52,7 @@ RUN dpkg --add-architecture i386 && \
     apt-get -yq autoremove && \
     apt-get clean && \
     apt-get autoclean && \
+    apt-get install -yq openjdk-8-jdk && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 COPY config.ini /root/.android/avd/x86.avd/config.ini
