@@ -90,7 +90,13 @@ done
 sleep 5
 
 adb shell settings put global http_proxy ts16.pyn.ru:3128 #set http proxy
+
+sleep 5
+
 adb shell settings put secure location_providers_allowed +gps #enable gps source
+
+sleep 1
+
 adb shell settings put secure location_providers_allowed +network #enable network source
 
 sleep 2
